@@ -1,3 +1,6 @@
 **.xcuserstate
 *.xcworkspacedata
 *.xcscheme
+FaceHeatIOS/pods/**
+podfile.lock
+**/xcuserdata/*
