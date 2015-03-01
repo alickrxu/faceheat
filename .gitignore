@@ -4,3 +4,8 @@
 FaceHeatIOS/pods/**
 podfile.lock
 **/xcuserdata/*
+FaceHeatIOS/FaceHeatIOS/FLIROneSDK.framework/FLIROneSDK*
+FaceHeatIOS/FaceHeatIOS/FLIROneSDK.framework/Headers*
+FaceHeatIOS/FaceHeatIOS/FLIROneSDK.framework/Versions/A/Headers/*
+FaceHeatIOS/FaceHeatIOS/FLIROneSDK.framework/Versions/Current*
+FaceHeatIOS/FaceHeatIOS/FLIROneSDK.framework/Versions/A/FLIROneSDK
