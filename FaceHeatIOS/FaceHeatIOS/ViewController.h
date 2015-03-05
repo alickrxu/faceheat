@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
+#import <ImageIO/ImageIO.h>
+#import <CoreImage/CoreImage.h>
+#import <QuartzCore/QuartzCore.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<AVCaptureAudioDataOutputSampleBufferDelegate>
 
+@property AVCaptureVideoPreviewLayer *previewLayer;
+@property AVCaptureVideoDataOutput *output;
 
 @end
-
