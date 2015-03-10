@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+#import "BLE.h"
+@interface ViewController : UIViewController<BLEDelegate>
+- (IBAction)scan:(id)sender;
+- (IBAction)sendData:(id)sender;
 
-@interface ViewController : UIViewController
-
+@property(nonatomic, strong) BLE *ble;
+@property(nonatomic, strong) CBPeripheral *activePeripheral;
 
 @end
 
