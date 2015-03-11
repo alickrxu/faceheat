@@ -12,9 +12,7 @@
 @interface ViewController ()
 
 //The main viewfinder for the FLIR ONE
-@property (weak, nonatomic) IBOutlet UIView *masterImageView;
-@property (strong, nonatomic) IBOutlet UIImageView *thermalImageView;
-@property (strong, nonatomic) IBOutlet UIImageView *radiometricImageView;
+
 @property (weak, nonatomic) IBOutlet UILabel *connectionLabel;
 
 //labels for various camera information
@@ -26,7 +24,6 @@
 
 //buttons for interacting with the FLIR ONE
 //capture video
-@property (nonatomic, strong) IBOutlet UIButton *captureVideoButton;
 
 //FLIR data for UI to display
 @property (strong, nonatomic) UIImage *visualYCbCrImage;
@@ -55,6 +52,12 @@
     self.renderQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     
     
+    
+    
+    NSDictionary *detectoroptions = [[NSDictionary alloc] initWithObjectsAndKeys:
+                             @"CIDetectorAccuracy", @"CIDetectorAccuracyLow",nil];
+    self.facedetector = [CIDetector detectorOfType:CIDetectorTypeFace context:nil options:detectoroptions];
+    
     // add view controller to FLIR stream manager delegates
     [[FLIROneSDKStreamManager sharedInstance] addDelegate:self];
     [[FLIROneSDKStreamManager sharedInstance] setImageOptions: self.options];
@@ -69,13 +72,13 @@
 }
 
 - (void) FLIROneSDKDidConnect {
-    self.connectionLabel.text = @"connected";
     self.connected = YES;
+    [self updateUI];
 }
 
 - (void) FLIROneSDKDidDisconnect {
-    self.connectionLabel.text = @"disconnected";
     self.connected = NO;
+    [self updateUI];
 }
 
 
@@ -102,7 +105,20 @@
 
 - (void) updateUI {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.thermalImage.image = self.visualYCbCrImage;
+        self.yc8view.image = self.visualYCbCrImage;
+        if (self.connected)
+            self.connectionLabel.text = @"connected";
+        else
+            self.connectionLabel.text = @"disconnected";
+        
+        NSArray *features = [self.facedetector featuresInImage:[[CIImage alloc] initWithImage: self.visualYCbCrImage]];
+        
+        for (CIFeature *faceFeature in features){
+            self.faceFeatureLabel.text = [NSString stringWithFormat:@"%f %f", faceFeature.bounds.size.height, faceFeature.bounds.size.width];
+        }
+        
+        
+        self.thermalView.image = self.radiometricImage;
     });
 }
 
@@ -127,7 +143,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         self.radiometricImage = [FLIROneSDKUIImage imageWithFormat:FLIROneSDKImageOptionsThermalRadiometricKelvinImage andData:radiometricData andSize:size];
-        //update UI here
+        [self updateUI];
     });
 }
 
@@ -172,7 +188,6 @@
         image = self.radiometricImage;
     }
     if(!image) {
-        image = self.thermalImage;
     }
     if(!image) {
         image = self.visualYCbCrImage;

@@ -12,7 +12,9 @@
 
 @interface ViewController : UIViewController <FLIROneSDKImageReceiverDelegate, FLIROneSDKStreamManagerDelegate, FLIROneSDKVideoRendererDelegate, FLIROneSDKImageEditorDelegate>
 
-
-@property (weak, nonatomic) IBOutlet UIImageView *thermalImage;
+@property (weak, nonatomic) IBOutlet UIImageView *yc8view;
+@property (weak, nonatomic) IBOutlet UIImageView *thermalView;
+@property (weak, nonatomic) IBOutlet UILabel *faceFeatureLabel;
+@property (strong, nonatomic) CIDetector *facedetector;
 @end
 

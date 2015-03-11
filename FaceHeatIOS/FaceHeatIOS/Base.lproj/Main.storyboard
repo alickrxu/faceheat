@@ -24,14 +24,25 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qVc-rs-Isc">
-                                <rect key="frame" x="16" y="160" width="200" height="227"/>
+                                <rect key="frame" x="4" y="160" width="145" height="154"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fbn-1I-YUu">
+                                <rect key="frame" x="150" y="160" width="149" height="154"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="features" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8o6-E2-mHK">
+                                <rect key="frame" x="0.0" y="343" width="299" height="40"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
                         <outlet property="connectionLabel" destination="XXK-rs-cfR" id="9QF-3q-dht"/>
-                        <outlet property="thermalImage" destination="qVc-rs-Isc" id="9yj-lT-Vz4"/>
+                        <outlet property="faceFeatureLabel" destination="8o6-E2-mHK" id="YGZ-oC-JS0"/>
+                        <outlet property="thermalView" destination="Fbn-1I-YUu" id="LaK-q5-3Vr"/>
+                        <outlet property="yc8view" destination="qVc-rs-Isc" id="8Us-K9-zeK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
