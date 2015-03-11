@@ -13,5 +13,6 @@
 @interface ViewController : UIViewController <FLIROneSDKImageReceiverDelegate, FLIROneSDKStreamManagerDelegate, FLIROneSDKVideoRendererDelegate, FLIROneSDKImageEditorDelegate>
 
 
+@property (weak, nonatomic) IBOutlet UIImageView *thermalImage;
 @end
 

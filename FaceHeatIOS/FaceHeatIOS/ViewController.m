@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UIView *masterImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *thermalImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *radiometricImageView;
+@property (weak, nonatomic) IBOutlet UILabel *connectionLabel;
 
 //labels for various camera information
 @property (strong, nonatomic) UIView *hottestPoint;
@@ -28,7 +29,6 @@
 @property (nonatomic, strong) IBOutlet UIButton *captureVideoButton;
 
 //FLIR data for UI to display
-@property (strong, nonatomic) UIImage *thermalImage;
 @property (strong, nonatomic) UIImage *visualYCbCrImage;
 @property (strong, nonatomic) UIImage *radiometricImage;
 
@@ -62,17 +62,30 @@
     //update UI here
 }
 
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 - (void) FLIROneSDKDidConnect {
+    self.connectionLabel.text = @"connected";
     self.connected = YES;
 }
 
 - (void) FLIROneSDKDidDisconnect {
+    self.connectionLabel.text = @"disconnected";
     self.connected = NO;
+}
+
+
+- (void) FLIROneSDKTuningStateDidChange:(FLIROneSDKTuningState)newTuningState {
+    self.tuningState = newTuningState;
+}
+
+
+- (UIImage *)imageForFrameAtTimestamp:(CMTime)timestamp{
+    return [[UIImage alloc] init];
 }
 
 // once per frame, this method is called and notifies the delegate. Depending on type of image, a different
@@ -86,11 +99,20 @@
     //update UI here
 }
 
+
+- (void) updateUI {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.thermalImage.image = self.visualYCbCrImage;
+    });
+}
+
 // when visualYCbCr is captured, this gets called. Best formatted for temperature data
 - (void)FLIROneSDKDelegateManager:(FLIROneSDKDelegateManager *)delegateManager didReceiveVisualYCbCr888Image:(NSData *)visualYCbCr888Image imageSize:(CGSize)size {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         self.visualYCbCrImage = [FLIROneSDKUIImage imageWithFormat:FLIROneSDKImageOptionsVisualYCbCr888Image andData:visualYCbCr888Image andSize:size];
+        
+        [self updateUI];
         //update UI here
     });
     
@@ -108,6 +130,7 @@
         //update UI here
     });
 }
+
 
 
 // converts temperature data into degrees (Kelvin). NOTE the pixels in the image are row major, ex:
@@ -131,8 +154,12 @@
         //get the x coordinate and y coordinate of visual, convert to thermal
     }
     
+}
+
+- (void) oldValueAsInt{
     
 }
+
 
 - (void) convertVisualCoordToThermalCoord: (CGFloat *) xVis yVis:(CGFloat *) yVis {
     
@@ -140,7 +167,7 @@
 
 //grab any valid image delivered from the sled
 - (UIImage *)currentImage {
-    UIImage *image = self.visualJPEGImage;
+    UIImage *image = self.visualYCbCrImage;
     if(!image) {
         image = self.radiometricImage;
     }
