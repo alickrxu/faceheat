@@ -16,5 +16,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *thermalView;
 @property (weak, nonatomic) IBOutlet UILabel *faceFeatureLabel;
 @property (strong, nonatomic) CIDetector *facedetector;
+
+@property (strong, nonatomic) NSArray * faceFeatures;
 @end
 

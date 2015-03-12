@@ -111,14 +111,13 @@
         else
             self.connectionLabel.text = @"disconnected";
         
-        NSArray *features = [self.facedetector featuresInImage:[[CIImage alloc] initWithImage: self.visualYCbCrImage]];
+        self.thermalView.image = self.radiometricImage;
         
-        for (CIFeature *faceFeature in features){
+        
+        for (CIFeature *faceFeature in self.faceFeatures){
             self.faceFeatureLabel.text = [NSString stringWithFormat:@"%f %f", faceFeature.bounds.size.height, faceFeature.bounds.size.width];
         }
-        
-        
-        self.thermalView.image = self.radiometricImage;
+        self.faceFeatures = @[];
     });
 }
 
@@ -127,6 +126,9 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         self.visualYCbCrImage = [FLIROneSDKUIImage imageWithFormat:FLIROneSDKImageOptionsVisualYCbCr888Image andData:visualYCbCr888Image andSize:size];
+        
+        
+        self.faceFeatures = [self.facedetector featuresInImage:[[CIImage alloc] initWithImage: self.visualYCbCrImage]];
         
         [self updateUI];
         //update UI here
@@ -172,14 +174,7 @@
     
 }
 
-- (void) oldValueAsInt{
-    
-}
 
-
-- (void) convertVisualCoordToThermalCoord: (CGFloat *) xVis yVis:(CGFloat *) yVis {
-    
-}
 
 //grab any valid image delivered from the sled
 - (UIImage *)currentImage {
