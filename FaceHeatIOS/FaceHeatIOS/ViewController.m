@@ -17,11 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(orientationChanged)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
-    // Do any additional setup after loading the view.
+       // Do any additional setup after loading the view.
     
     //Capture Session
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
@@ -38,6 +34,7 @@
     {
         NSLog(@"No Input");
     }
+    
     [session addInput:input];
     //Output
     _output = [[AVCaptureVideoDataOutput alloc] init];
@@ -61,23 +58,7 @@
 
 }
 
--(void) orientationChanged
-{
-    _previewLayer.frame = self.view.bounds;
-    // get the new orientation from device
-    AVCaptureVideoOrientation newOrientation = [UIDevice currentDevice].orientation;
-    
-    for (AVCaptureConnection *connection in _output.connections){
-        [connection setVideoOrientation:newOrientation];
-    }
-    
-    // set the orientation of preview layer :( which will be displayed in the device )
-    [_previewLayer.connection setVideoOrientation:newOrientation];
-    
-    // set the orientation of the connection: which will take care of capture
-    //[pCaptureConnection setVideoOrientation:newOrientation];
-    
-}
+
 
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput
@@ -90,10 +71,7 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     for (CIFaceFeature *f in features){
         const CGRect faceRect = CGRectApplyAffineTransform(f.bounds, CGAffineTransformMakeScale(1, 1));
         
-        UIView *faceView = [[UIView alloc] initWithFrame:faceRect];
-        faceView.layer.borderWidth = 1.0f;
-        faceView.layer.borderColor = [[UIColor greenColor] CGColor];
-        [self.view addSubview:faceView];
+;
         
     }
 }
