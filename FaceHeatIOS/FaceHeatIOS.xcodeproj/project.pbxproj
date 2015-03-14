@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		86C936051AA53C4E001A5510 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86C936041AA53C4E001A5510 /* ImageIO.framework */; };
+		862332DA1AAD3FAE00B62108 /* BLE.m in Sources */ = {isa = PBXBuildFile; fileRef = 862332D81AAD3FAE00B62108 /* BLE.m */; };
 		86D61E2D1A96C47D00A83C36 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D61E2C1A96C47D00A83C36 /* main.m */; };
 		86D61E301A96C47D00A83C36 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D61E2F1A96C47D00A83C36 /* AppDelegate.m */; };
 		86D61E331A96C47D00A83C36 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86D61E321A96C47D00A83C36 /* ViewController.m */; };
@@ -31,7 +31,9 @@
 		0EFAC9DCE5617CE42922CBA8 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		372BE4853BF34840E2113403 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		50AA307088F5F98AD54CF424 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		86C936041AA53C4E001A5510 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		862332D71AAD3FAE00B62108 /* BLE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BLE.h; path = "../../../../../../Downloads/iOS-master/Examples/BLEController/BLE/BLE.h"; sourceTree = "<group>"; };
+		862332D81AAD3FAE00B62108 /* BLE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BLE.m; path = "../../../../../../Downloads/iOS-master/Examples/BLEController/BLE/BLE.m"; sourceTree = "<group>"; };
+		862332D91AAD3FAE00B62108 /* BLEDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BLEDefines.h; path = "../../../../../../Downloads/iOS-master/Examples/BLEController/BLE/BLEDefines.h"; sourceTree = "<group>"; };
 		86D61E271A96C47D00A83C36 /* FaceHeatIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FaceHeatIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		86D61E2B1A96C47D00A83C36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		86D61E2C1A96C47D00A83C36 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -59,13 +61,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				86C936051AA53C4E001A5510 /* ImageIO.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		86257D781AAA619500E0614E /* BT */ = {
+			isa = PBXGroup;
+			children = (
+				862332D71AAD3FAE00B62108 /* BLE.h */,
+				862332D81AAD3FAE00B62108 /* BLE.m */,
+				862332D91AAD3FAE00B62108 /* BLEDefines.h */,
+			);
+			name = BT;
+			sourceTree = "<group>";
+		};
 		86D61E1E1A96C47D00A83C36 = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +100,7 @@
 		86D61E291A96C47D00A83C36 /* FaceHeatIOS */ = {
 			isa = PBXGroup;
 			children = (
+				86257D781AAA619500E0614E /* BT */,
 				86D61E2E1A96C47D00A83C36 /* AppDelegate.h */,
 				86D61E2F1A96C47D00A83C36 /* AppDelegate.m */,
 				86D61E311A96C47D00A83C36 /* ViewController.h */,
@@ -130,7 +142,6 @@
 		A3EB44B7557CF424B8A76C6B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				86C936041AA53C4E001A5510 /* ImageIO.framework */,
 				0EFAC9DCE5617CE42922CBA8 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -248,6 +259,7 @@
 				86D61E331A96C47D00A83C36 /* ViewController.m in Sources */,
 				86D61E301A96C47D00A83C36 /* AppDelegate.m in Sources */,
 				86D61E2D1A96C47D00A83C36 /* main.m in Sources */,
+				862332DA1AAD3FAE00B62108 /* BLE.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,7 +303,6 @@
 /* Begin XCBuildConfiguration section */
 		86D61E481A96C47D00A83C36 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 372BE4853BF34840E2113403 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -333,7 +344,6 @@
 		};
 		86D61E491A96C47D00A83C36 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50AA307088F5F98AD54CF424 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";

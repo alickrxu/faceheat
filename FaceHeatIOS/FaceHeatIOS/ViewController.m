@@ -10,9 +10,13 @@
 
 @interface ViewController ()
 
-@end
 
+@end
 @implementation ViewController
+@synthesize ble;
+
+int currentAngle = 125;
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -20,43 +24,12 @@
        // Do any additional setup after loading the view.
     
     //Capture Session
-    AVCaptureSession *session = [[AVCaptureSession alloc] init];
-    session.sessionPreset = AVCaptureSessionPresetPhoto;
-    
-    //Add device
-    AVCaptureDevice *device =
-    [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    
-    //Input
-    AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:device error:nil];
-    
-    if (!input)
-    {
-        NSLog(@"No Input");
-    }
-    
-    [session addInput:input];
-    //Output
-    _output = [[AVCaptureVideoDataOutput alloc] init];
-    [session addOutput:_output];
-    _output.videoSettings =
-    @{ (NSString *)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA) };
-    
-    
-    dispatch_queue_t queue = dispatch_queue_create("myQueue", NULL);
-    [_output setSampleBufferDelegate:self queue:queue];
-    
-    //Preview Layer
-    _previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
-    UIView *myView = self.view;
-    _previewLayer.frame = myView.bounds;
-    _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    [self.view.layer addSublayer:_previewLayer];
-    
-    //Start capture session
-    [session startRunning];
-
+   
+    ble = [[BLE alloc] init];
+    [ble controlSetup];
+    ble.delegate = self;
 }
+
 
 
 
@@ -65,23 +38,52 @@
 didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
        fromConnection:(AVCaptureConnection *)connection
 {
+    connection.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
     UIImage *image = [self imageFromSampleBuffer:sampleBuffer];
     NSArray *features = [self getFeatures:image];
     
     for (CIFaceFeature *f in features){
-        const CGRect faceRect = CGRectApplyAffineTransform(f.bounds, CGAffineTransformMakeScale(1, 1));
-        
-;
+        float centerX = (f.bounds.origin.x + f.bounds.size.width)/2.0;
+        float centerY = (f.bounds.origin.y + f.bounds.size.height)/2.0;
+        NSLog(@"%f", centerX);
+        [self centerRigX:centerX Y:centerY];
         
     }
 }
 
 
+- (void) centerRigX:(float)fcenterX Y:(float)fcenterY {
+    
+    
+    
+    NSLog(@"%f", fcenterX);
+    
+    if (fcenterX < 300 && fcenterX > 250)
+        return;
+    
+    if (fcenterX > 300){
+        currentAngle -= 2;
+    }
+    else {
+        currentAngle += 2;
+    }
+    
+    if (currentAngle > 255)
+        currentAngle = 255;
+    else if (currentAngle < 0)
+        currentAngle = 0;
+    char data[] = {'O', 0x02, currentAngle};
+    
+    [self sendData:[NSData dataWithBytes:data length:3]];
+}
 
 
 
 
-
+- (void) scanForPeripherals {
+    [ble findBLEPeripherals:3];
+    [NSTimer scheduledTimerWithTimeInterval:(float)3.0 target:self selector:@selector(connectionTimer:) userInfo:nil repeats:NO];
+}
 
 
 
@@ -93,9 +95,7 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     CIDetector* detector = [CIDetector detectorOfType:CIDetectorTypeFace
                                               context:nil options:opts];
     
-   // opts = @{ CIDetectorImageOrientation :
-     //             [[ciImage properties] valueForKey:kCGImagePropertyOrientation] }; // 4
-    NSArray * features = [detector featuresInImage:ciImage];
+    NSArray * features = [detector featuresInImage:ciImage options:@{ CIDetectorImageOrientation : @1}];
     return features;
 }
 
@@ -137,6 +137,7 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     // Release the Quartz image
     CGImageRelease(quartzImage);
     
+    
     return ([UIImage imageWithCIImage:image]);
 }
 
@@ -144,10 +145,85 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
 - (void) willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     [UIView setAnimationsEnabled:NO];
 }
+- (void) bleDidReceiveData:(unsigned char *)data length:(int)length{
+
+//   NSLog(@"received data: %s", data);
+}
+
+-(void) connectionTimer:(NSTimer *)timer
+{
+    if (ble.peripherals.count < 1){
+        NSLog(@"none found");
+        return;
+    }
+    self.activePeripheral = ble.peripherals[0];
+    [ble connectPeripheral:self.activePeripheral];
+}
+
+
+
+-(void) bleDidConnect {
+    AVCaptureSession *session = [[AVCaptureSession alloc] init];
+    session.sessionPreset = AVCaptureSessionPresetPhoto;
+    
+    //Add device
+    AVCaptureDevice *device =
+    [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
+    //Input
+    AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:device error:nil];
+    
+    if (!input)
+    {
+        NSLog(@"No Input");
+    }
+    
+    [session addInput:input];
+    //Output
+    self.output = [[AVCaptureVideoDataOutput alloc] init];
+    [session addOutput:self.output];
+    self.output.videoSettings = @{ (NSString *)kCVPixelBufferPixelFormatTypeKey : @(kCVPixelFormatType_32BGRA) };
+    
+    
+    dispatch_queue_t queue = dispatch_queue_create("myQueue", NULL);
+    [_output setSampleBufferDelegate:self queue:queue];
+    
+    //Preview Layer
+    _previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
+    UIView *myView = self.view;
+    _previewLayer.frame = CGRectMake(0, 0, myView.bounds.size.height, myView.bounds.size.width);
+    _previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    [self.view.layer addSublayer:_previewLayer];
+    AVCaptureConnection *previewLayerConnection=self.previewLayer.connection;
+    previewLayerConnection.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
+    char init1[] = {'S', 0x02, 0x04};
+    [self sendData: [NSData dataWithBytes:init1 length:3]];
+    char centerX[] = {'O', 0x02, currentAngle};
+    
+    [self sendData:[NSData dataWithBytes:centerX length:3]];
+    //Start capture session
+    [session startRunning];
+
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+- (void) sendData:(char *) bytes length:(int) length{
+    [self sendData:[NSData dataWithBytes:bytes length:length]];
+}
+
+- (void) sendData:(NSData *) data {
+    [ble write:data];
+}
+
+
+- (IBAction)scan:(id)sender {
+    [self scanForPeripherals];
+}
+
 
 @end

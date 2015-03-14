@@ -11,10 +11,14 @@
 #import <ImageIO/ImageIO.h>
 #import <CoreImage/CoreImage.h>
 #import <QuartzCore/QuartzCore.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+#import "BLE.h"
 
-@interface ViewController : UIViewController<AVCaptureAudioDataOutputSampleBufferDelegate>
 
-@property AVCaptureVideoPreviewLayer *previewLayer;
-@property AVCaptureVideoDataOutput *output;
+@interface ViewController : UIViewController
 
+@property(nonatomic, strong) BLE *ble;
+@property(nonatomic, strong) CBPeripheral *activePeripheral;
+@property(nonatomic, strong) AVCaptureVideoDataOutput *output;
+@property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
 @end
